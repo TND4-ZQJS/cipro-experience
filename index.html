@@ -239,28 +239,50 @@
 
         // Renders changes inside the main central video stage smoothly
         function updateStagePlayer(index) {
-            const dataItem = playlistData[index];
-            
-            // Reconfigure YouTube secure embed URL target
-            document.getElementById('mainVideoPlayer').src = `https://www.youtube.com/embed/${dataItem.youtubeId.toString().trim().replace('watch?v=', '')}?rel=0`;
-            
-            // Rewrite content parameters text blocks instantly
-            document.getElementById('videoTitle').innerText = dataItem.title;
-            document.getElementById('videoDescription').innerText = dataItem.description;
-            
-            // Format character indicator icon based on type category configuration
-            const iconMarker = dataItem.sourceType.toLowerCase() === 'country' ? '🌐' : '📺';
-            document.getElementById('videoSourceBadge').innerText = `${iconMarker} ${dataItem.sourceType}: ${dataItem.sourceValue}`;
+    const dataItem = playlistData[index];
+    const playerWrapper = document.querySelector('.video-player-wrapper');
+    
+    // Check if the current item is our specific restricted video
+    if (dataItem.youtubeId === "r_wtiJ5N_ro") {
+        // Swap out the broken iframe with a beautiful Apple-style link stage
+        playerWrapper.innerHTML = `
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #1c1c1e; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #ffffff; padding: 32px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+                <div style="font-size: 40px; margin-bottom: 12px;">📺</div>
+                <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em;">External Streaming Required</h2>
+                <p style="font-size: 14px; color: #a1a1a6; max-width: 440px; margin-bottom: 24px; line-height: 1.5;">This specific training module has security controls that require it to be viewed directly on the native platform.</p>
+                <a href="https://www.youtube.com/watch?v=${dataItem.youtubeId}" target="_blank" style="background: #0071e3; color: #ffffff; text-decoration: none; padding: 12px 26px; border-radius: 999px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,113,227,0.3); transition: all 0.2s ease;">
+                    Watch on YouTube 
+                    <span style="font-size: 11px; opacity: 0.8;">↗</span>
+                </a>
+            </div>
+        `;
+    } else {
+        // Render the flawless standard embedded iframe player for normal videos
+        playerWrapper.innerHTML = `
+            <iframe 
+                id="mainVideoPlayer"
+                src="https://www.youtube.com/embed/${dataItem.youtubeId}?rel=0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        `;
+    }
+    
+    // Update text modules as usual
+    document.getElementById('videoTitle').innerText = dataItem.title;
+    document.getElementById('videoDescription').innerText = dataItem.description;
+    
+    const iconMarker = dataItem.sourceType.toLowerCase() === 'country' ? '🌐' : '📺';
+    document.getElementById('videoSourceBadge').innerText = `${iconMarker} ${dataItem.sourceType}: ${dataItem.sourceValue}`;
 
-            // Sync visual active capsule state classes on selectors
-            document.querySelectorAll('.playlist-card').forEach((card, currentIdx) => {
-                if (currentIdx === index) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
+    document.querySelectorAll('.playlist-card').forEach((card, currentIdx) => {
+        if (currentIdx === index) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
         }
+    });
+}
 
         // Builds selection card grids automatically based on data array size 
         function generatePlaylistInterface() {
