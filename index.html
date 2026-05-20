@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InsuFlow | CI Pro Experience</title>
     
-    <!-- Shared global navigation style link -->
+    <!-- 1. Load your shared global header styles -->
     <link rel="stylesheet" href="global-nav.css">
 
     <style>
@@ -18,7 +18,7 @@
         }
 
         .workspace-container {
-            max-width: 940px;
+            max-width: 940px; /* Optimized layout width for focused video viewing */
             margin: 40px auto;
             padding: 0 24px 80px 24px;
         }
@@ -36,7 +36,7 @@
         .video-player-wrapper {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 widescreen ratio */
+            padding-top: 56.25%; /* Golden 16:9 widescreen ratio */
             background-color: #000000;
         }
 
@@ -61,6 +61,7 @@
             color: #1d1d1f;
         }
 
+        /* Attribution Badges styling */
         .meta-strip {
             display: flex;
             gap: 8px;
@@ -119,6 +120,7 @@
             transform: translateY(-1px);
         }
 
+        /* Premium active indicator ring */
         .playlist-card.active {
             background-color: #f5f5f7;
             border-color: #0071e3;
@@ -146,6 +148,7 @@
             padding-top: 4px;
         }
 
+        /* Responsive spacing fixes for smaller viewports */
         @media (max-width: 768px) {
             .stage-info { padding: 20px; }
             .stage-info h1 { font-size: 20px; }
@@ -155,7 +158,7 @@
 </head>
 <body>
 
-    <!-- Universal Top Navigation Row -->
+    <!-- 2. Sticky Universal Top Header Row -->
     <header class="navbar">
         <div class="nav-container">
             <span class="logo" onclick="window.location.href='dashboard.html'">InsuFlow Hub</span>
@@ -164,6 +167,7 @@
                 <span></span><span></span><span></span>
             </div>
 
+            <!-- Easily sync these link targets with your other web app pages -->
             <nav class="nav-menu" id="navMenu">
                 <a href="dashboard.html" class="nav-item">Operational Hub</a>
                 <a href="ci-pro-experience.html" class="nav-item active">CI Pro Experience</a>
@@ -173,15 +177,19 @@
         </div>
     </header>
 
-    <!-- Workspace Content Layout Display Stage -->
+    <!-- 3. Primary Content Workspace -->
     <main class="workspace-container">
         
+        <!-- The Main Focal Stage Card Component -->
         <div class="stage-card">
-            <!-- This container updates dynamically via JavaScript -->
-            <div class="video-player-wrapper" id="videoWrapperContainer">
-                <!-- Fallback framework will override this cleanly -->
+            <div class="video-player-wrapper">
+                <iframe 
+                    id="mainVideoPlayer"
+                    src="" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
             </div>
-            
             <div class="stage-info">
                 <div class="meta-strip">
                     <span id="videoSourceBadge" class="source-badge">Loading...</span>
@@ -191,82 +199,60 @@
             </div>
         </div>
 
+        <!-- Horizontal/Grid Selector Playlist below -->
         <div class="playlist-section-title">Training Modules</div>
         <div class="playlist-grid" id="playlistItemsGrid"></div>
 
     </main>
 
-    <!-- Interactive Workspace Control Logic -->
+    <!-- 4. Interactive Playlist Content Controller Engine -->
     <script>
+        // MOBILE HAMBURGER MENU TOGGLE BUTTON LOGIC
         function toggleMobileMenu() {
             document.getElementById('navMenu').classList.toggle('show');
         }
 
-        // VIDEO DATA INVENTORY LIST
+        // MASTER DATA ARRAY DATABASE: Modify, add, or swap your video inventory parameters right here!
         const playlistData = [
             {
                 title: "Understanding Critical Illness Core Concepts",
                 description: "An operational walkthrough outlining definition structural adjustments, policy waiting period metrics, and primary claim validation steps required for client processing pipelines.",
-                sourceType: "Channel",
-                sourceValue: "CI Pro Media",
-                youtubeId: "r_wtiJ5N_ro" // <-- The exact protected YouTube URL target ID
+                sourceType: "Channel",          // Can evaluate as "Channel" or "Country"
+                sourceValue: "CI Pro Media",     // The text label display value
+                youtubeId: "=r_wtiJ5N_ro"         // Swap this code with your custom YouTube URL ID string
             },
             {
                 title: "Early Stage vs Advanced Stage Parameters",
                 description: "A specialized contrast breakdown evaluating claim payout differences, tiered exception clauses, and cross-border underwriting benchmarks.",
                 sourceType: "Country",
                 sourceValue: "Malaysia Operations",
-                youtubeId: "dQw4w9WgXcQ" // Standard test ID (Unblocked)
+                youtubeId: "dQw4w9WgXcQ"
             },
             {
                 title: "Offshore Portfolio Premium Protection Plans",
                 description: "How structural wealth insurance policy choices protect business stability metrics and private family holdings during complex medical scenarios.",
                 sourceType: "Country",
                 sourceValue: "Labuan Offshore",
-                youtubeId: "dQw4w9WgXcQ" // Standard test ID (Unblocked)
+                youtubeId: "dQw4w9WgXcQ"
             }
         ];
 
-        // Central state switcher logic engine
+        // Renders changes inside the main central video stage smoothly
         function updateStagePlayer(index) {
             const dataItem = playlistData[index];
-            const playerWrapper = document.getElementById('videoWrapperContainer');
             
-            // Clean dynamic parameter ID safety formatting check
-            const cleanId = dataItem.youtubeId.toString().trim().replace('watch?v=', '');
-
-            // SYSTEM CHECK: If the video ID matches the blocked video, drop fallback display card instead
-            if (cleanId === "r_wtiJ5N_ro") {
-                playerWrapper.innerHTML = `
-                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #1c1c1e; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #ffffff; padding: 32px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-                        <div style="font-size: 40px; margin-bottom: 12px;">📺</div>
-                        <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em;">External Streaming Required</h2>
-                        <p style="font-size: 14px; color: #a1a1a6; max-width: 440px; margin-bottom: 24px; line-height: 1.5;">This specific training module has security controls that require it to be viewed directly on the native platform.</p>
-                        <a href="https://www.youtube.com/watch?v=${cleanId}" target="_blank" style="background: #0071e3; color: #ffffff; text-decoration: none; padding: 12px 26px; border-radius: 999px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,113,227,0.3); transition: all 0.2s ease;">
-                            Watch on YouTube 
-                            <span style="font-size: 11px; opacity: 0.8;">↗</span>
-                        </a>
-                    </div>
-                `;
-            } else {
-                // Otherwise render the stable, interactive standard YouTube player element
-                playerWrapper.innerHTML = `
-                    <iframe 
-                        src="https://www.youtube.com/embed/${cleanId}?rel=0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                `;
-            }
+            // Reconfigure YouTube secure embed URL target
+            document.getElementById('mainVideoPlayer').src = `https://www.youtube.com/embed/${dataItem.youtubeId.toString().trim().replace('watch?v=', '')}?rel=0`;
             
-            // Sync content detail cards strings blocks
+            // Rewrite content parameters text blocks instantly
             document.getElementById('videoTitle').innerText = dataItem.title;
             document.getElementById('videoDescription').innerText = dataItem.description;
             
+            // Format character indicator icon based on type category configuration
             const iconMarker = dataItem.sourceType.toLowerCase() === 'country' ? '🌐' : '📺';
             document.getElementById('videoSourceBadge').innerText = `${iconMarker} ${dataItem.sourceType}: ${dataItem.sourceValue}`;
 
-            // Sync structural selection active highlights
+            // Sync visual active capsule state classes on selectors
             document.querySelectorAll('.playlist-card').forEach((card, currentIdx) => {
                 if (currentIdx === index) {
                     card.classList.add('active');
@@ -276,7 +262,7 @@
             });
         }
 
-        // Builds selection card lists dynamically
+        // Builds selection card grids automatically based on data array size 
         function generatePlaylistInterface() {
             const listGrid = document.getElementById('playlistItemsGrid');
             listGrid.innerHTML = ''; 
@@ -296,11 +282,11 @@
                 listGrid.appendChild(cardElement);
             });
 
-            // Initialize structural configuration targeting position 0 using our secure function
+            // Initialize display properties using first inventory position configuration
             updateStagePlayer(0);
         }
 
-        // Process compilation when browser page building resolves
+        // Trigger compilation process instantly when layout elements build complete
         document.addEventListener("DOMContentLoaded", function() {
             generatePlaylistInterface();
         });
