@@ -242,7 +242,7 @@
             const dataItem = playlistData[index];
             
             // Reconfigure YouTube secure embed URL target
-            document.getElementById('mainVideoPlayer').src = `https://www.youtube.com/embed/${dataItem.youtubeId}?rel=0&modestbranding=1`;
+            document.getElementById('mainVideoPlayer').src = `https://www.youtube.com/embed/${dataItem.youtubeId.toString().trim().replace('watch?v=', '')}?rel=0`;
             
             // Rewrite content parameters text blocks instantly
             document.getElementById('videoTitle').innerText = dataItem.title;
