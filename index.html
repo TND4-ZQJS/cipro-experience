@@ -15,6 +15,7 @@
             color: #1d1d1f;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
+            margin: 0;
         }
 
         .workspace-container {
@@ -59,6 +60,7 @@
             letter-spacing: -0.015em;
             margin-bottom: 6px;
             color: #1d1d1f;
+            margin-top: 0;
         }
 
         .meta-strip {
@@ -82,6 +84,64 @@
             font-size: 15px;
             color: #515154;
             line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Collapsible Translation Guide */
+        .translation-guide-container {
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding-top: 10px;
+            margin-bottom: 16px;
+            margin-top: -4px;
+        }
+
+        .guide-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 11px;
+            font-weight: 500;
+            color: #0066cc; /* Apple's classic interactive link blue */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .guide-toggle-btn:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+
+        .guide-icon {
+            font-size: 11px;
+        }
+
+        /* Hidden by default with smooth expansion */
+        .guide-steps-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-out;
+        }
+
+        .guide-steps-content.show {
+            max-height: 80px; /* Gives it room to slide open */
+            opacity: 1;
+            padding-top: 6px;
+        }
+
+        .guide-steps {
+            margin: 0;
+            font-size: 11px;
+            color: #86868b;
+            line-height: 1.5;
+        }
+
+        .guide-steps strong {
+            font-weight: 500;
+            color: #1d1d1f;
         }
 
         /* Apple Style Segmented Filter Tabs */
@@ -180,63 +240,6 @@
             .stage-info h1 { font-size: 20px; }
             .workspace-container { padding: 0 16px 60px 16px; }
         }
-        
-/* Collapsible Translation Guide */
-.translation-guide-container {
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding-top: 10px;
-    margin-bottom: 16px;
-    margin-top: -4px;
-}
-
-.guide-toggle-btn {
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: 11px;
-    font-weight: 500;
-    color: #0066cc; /* Apple's classic interactive link blue */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.2s ease;
-}
-
-.guide-toggle-btn:hover {
-    color: #004499;
-    text-decoration: underline;
-}
-
-.guide-icon {
-    font-size: 11px;
-}
-
-/* Hidden by default with smooth expansion */
-.guide-steps-content {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: all 0.3s ease-out;
-}
-
-.guide-steps-content.show {
-    max-height: 80px; /* Gives it room to slide open */
-    opacity: 1;
-    padding-top: 6px;
-}
-
-.guide-steps {
-    margin: 0;
-    font-size: 11px;
-    color: #86868b;
-    line-height: 1.5;
-}
-
-.guide-steps strong {
-    font-weight: 500;
-    color: #1d1d1f;
-}
     </style>
 </head>
 <body>
@@ -262,44 +265,32 @@
     <!-- Workspace Content Layout Display Stage -->
     <main class="workspace-container">
         
-<div class="stage-card">
-    <div class="video-player-wrapper" id="videoWrapperContainer">
-        <!-- Video player maps dynamically here -->
-    </div>
-    
-<div class="stage-card">
-    <div class="video-player-wrapper" id="videoWrapperContainer">
-        <!-- Video player maps dynamically here -->
-    </div>
-    
-    <div class="stage-info">
-        <!-- Collapsible Minimalist Guide -->
-        <div class="translation-guide-container">
-            <button class="guide-toggle-btn" onclick="toggleTranslationGuide()">
-                <span class="guide-icon">🌐</span> View in 中文 (Chinese)...
-            </button>
-            <div id="collapsibleGuideSteps" class="guide-steps-content">
-                <p class="guide-steps">
-                    Captions are turned on by default. To translate: Click the player's <strong>Settings Gear (⚙️)</strong> ➡️ <strong>Subtitles/CC</strong> ➡️ <strong>Auto-translate</strong> ➡️ Select <strong>Chinese (Simplified)</strong>.
-                </p>
+        <!-- Clean Video Display Stage Card -->
+        <div class="stage-card">
+            <div class="video-player-wrapper" id="videoWrapperContainer">
+                <!-- Video player maps dynamically here -->
+            </div>
+            
+            <div class="stage-info">
+                <!-- Collapsible Minimalist Guide Box -->
+                <div class="translation-guide-container">
+                    <button class="guide-toggle-btn" onclick="toggleTranslationGuide()">
+                        <span class="guide-icon">🌐</span> View in 中文 (Chinese)...
+                    </button>
+                    <div id="collapsibleGuideSteps" class="guide-steps-content">
+                        <p class="guide-steps">
+                            Captions are turned on by default. To translate: Click the player's <strong>Settings Gear (⚙️)</strong> ➡️ <strong>Subtitles/CC</strong> ➡️ <strong>Auto-translate</strong> ➡️ Select <strong>Chinese (Simplified)</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="meta-strip">
+                    <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
+                </div>
+                <h1 id="videoTitle">Loading Session Title...</h1>
+                <p id="videoDescription">Loading descriptions...</p>
             </div>
         </div>
-
-        <div class="meta-strip">
-            <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
-        </div>
-        <h1 id="videoTitle">Loading Session Title...</h1>
-        <p id="videoDescription">Loading descriptions...</p>
-    </div>
-</div>
-
-        <div class="meta-strip">
-            <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
-        </div>
-        <h1 id="videoTitle">Loading Session Title...</h1>
-        <p id="videoDescription">Loading descriptions...</p>
-    </div>
-</div>
 
         <!-- Segmented Category Filters -->
         <div class="filter-navigation">
@@ -329,7 +320,7 @@
                 title: "Millennials Fighting Stage 4 Cancer: How We Found Out | Part 1/3",
                 description: "They’re under 45, fit, and thriving in their careers—until cancer turns their worlds upside down",
                 category: "English - Survivor’s Stories",
-                youtubeId: "Xwd-OdVXvx8" // Your newly uploaded working video!
+                youtubeId: "Xwd-OdVXvx8"
             },
             {
                 id: 1,
@@ -361,84 +352,48 @@
             }
         ];
 
-        // Keep track of the current video and user's selected language globally
-let currentActiveId = 0;
-let currentFilter = 'all';
-let activeCaptionLanguage = 'en'; // Default fallback initialization
+        // Keep track of parameters globally
+        let currentActiveId = 0;
+        let currentFilter = 'all';
 
-// Core update function to rebuild the YouTube player interface
-function updateStagePlayer(id, explicitLang = null) {
-    currentActiveId = id;
-    const dataItem = playlistData.find(item => item.id === id);
-    const playerWrapper = document.getElementById('videoWrapperContainer');
-    const cleanId = dataItem.youtubeId.toString().trim();
+        // Core update function to rebuild the YouTube player interface
+        function updateStagePlayer(id) {
+            currentActiveId = id;
+            const dataItem = playlistData.find(item => item.id === id);
+            if (!dataItem) return;
+            
+            const playerWrapper = document.getElementById('videoWrapperContainer');
+            const cleanId = dataItem.youtubeId.toString().trim();
 
-    // 1. If explicitLang is provided (button click), use it. Otherwise, auto-detect from category.
-    if (explicitLang) {
-        activeCaptionLanguage = explicitLang;
-    } else {
-        if (dataItem.category.includes("Chinese") || dataItem.category.includes("疾病后的人生")) {
-            activeCaptionLanguage = 'zh';
-        } else {
-            activeCaptionLanguage = 'en';
+            // cc_load_policy=1 combined with cc_lang_pref=en forces captions ON, overriding defaults
+            playerWrapper.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&cc_lang_pref=en&hl=en" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            // Update textual UI fields
+            document.getElementById('videoTitle').innerText = dataItem.title;
+            document.getElementById('videoDescription').innerText = dataItem.description;
+            document.getElementById('videoSourceBadge').innerText = dataItem.category;
+
+            // Highlight chosen item card inside the playlist UI grid
+            document.querySelectorAll('.playlist-card').forEach(card => {
+                if (parseInt(card.getAttribute('data-id')) === id) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
         }
-    }
-
-    // 2. Inject the parameterized iframe to reload the source target matching the selection
-    playerWrapper.innerHTML = `
-        <iframe 
-            src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&hl=${activeCaptionLanguage}&cc_lang_pref=${activeCaptionLanguage}" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
-    `;
-    
-    // 3. Update textual UI fields
-    document.getElementById('videoTitle').innerText = dataItem.title;
-    document.getElementById('videoDescription').innerText = dataItem.description;
-    document.getElementById('videoSourceBadge').innerText = dataItem.category;
-
-    // 4. Update the highlight state of the language selector UI buttons
-    document.getElementById('langBtnEn').classList.remove('active');
-    document.getElementById('langBtnZh').classList.remove('active');
-    
-    if (activeCaptionLanguage === 'zh') {
-        document.getElementById('langBtnZh').classList.add('active');
-    } else {
-        document.getElementById('langBtnEn').classList.add('active');
-    }
-
-    // 5. Highlight chosen item card inside the playlist UI grid
-    document.querySelectorAll('.playlist-card').forEach(card => {
-        if (parseInt(card.getAttribute('data-id')) === id) {
-            card.classList.add('active');
-        } else {
-            card.classList.remove('active');
-        }
-    });
-}
-
-function switchVideoLanguage(langCode) {
-    activeCaptionLanguage = langCode;
-    
-    const noticeBox = document.getElementById('translationNotice');
-    
-    if (langCode === 'zh') {
-        // Show the helpful coaching banner if they request Chinese subtitles
-        noticeBox.style.display = 'block';
-        updateStagePlayer(currentActiveId, 'zh');
-    } else {
-        // Hide it if they are using English
-        noticeBox.style.display = 'none';
-        updateStagePlayer(currentActiveId, 'en');
-    }
-}
 
         // Toggle visibility of the translation steps
-function toggleTranslationGuide() {
-    const stepsContent = document.getElementById('collapsibleGuideSteps');
-    stepsContent.classList.toggle('show');
-}
+        function toggleTranslationGuide() {
+            const stepsContent = document.getElementById('collapsibleGuideSteps');
+            stepsContent.classList.toggle('show');
+        }
 
         // Playlist filtering controller layout engine
         function filterPlaylist(categoryTag) {
@@ -474,7 +429,7 @@ function toggleTranslationGuide() {
                 listGrid.appendChild(cardElement);
             });
 
-            // If the filtered array leaves out our currently selected main player video, automatically switch player to first available video in the view array
+            // Auto-switch to first matching row if selection is filtered out
             if(filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
                 updateStagePlayer(filteredData[0].id);
             }
