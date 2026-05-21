@@ -335,6 +335,7 @@
                 description: "What does the future hold for these resilient young cancer patients? Can they overcome the odds and triumph over this relentless disease?",
                 category: "English - Survivor’s Stories",
                 youtubeId: "GvK6TYmFwjo"
+                noCaptions: true // 🌟 Add this line to bypass caption checks
             },
             {
                 id: 3,
@@ -356,38 +357,47 @@
         let currentActiveId = 0;
         let currentFilter = 'all';
 
-        // Core update function to rebuild the YouTube player interface
-        function updateStagePlayer(id) {
-            currentActiveId = id;
-            const dataItem = playlistData.find(item => item.id === id);
-            if (!dataItem) return;
-            
-            const playerWrapper = document.getElementById('videoWrapperContainer');
-            const cleanId = dataItem.youtubeId.toString().trim();
+function updateStagePlayer(id) {
+    currentActiveId = id;
+    const dataItem = playlistData.find(item => item.id === id);
+    if (!dataItem) return;
+    
+    const playerWrapper = document.getElementById('videoWrapperContainer');
+    const cleanId = dataItem.youtubeId.toString().trim();
 
-            // cc_load_policy=1 combined with cc_lang_pref=en forces captions ON, overriding defaults
-            playerWrapper.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&cc_lang_pref=en&hl=en" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            `;
-            
-            // Update textual UI fields
-            document.getElementById('videoTitle').innerText = dataItem.title;
-            document.getElementById('videoDescription').innerText = dataItem.description;
-            document.getElementById('videoSourceBadge').innerText = dataItem.category;
+    // 🌟 Check if this specific video has captions turned off by the owner
+    let captionParams = "";
+    if (dataItem.noCaptions) {
+        // Force captions completely OFF to prevent the seek/fast-forward crash
+        captionParams = "cc_load_policy=0";
+    } else {
+        // Keep your original behavior for normal caption-supported videos
+        captionParams = "cc_load_policy=1&cc_lang_pref=en&hl=en";
+    }
 
-            // Highlight chosen item card inside the playlist UI grid
-            document.querySelectorAll('.playlist-card').forEach(card => {
-                if (parseInt(card.getAttribute('data-id')) === id) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
+    // Inject the final parameterized iframe cleanly
+    playerWrapper.innerHTML = `
+        <iframe 
+            src="https://www.youtube.com/embed/${cleanId}?rel=0&${captionParams}" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    `;
+    
+    // Update textual UI fields
+    document.getElementById('videoTitle').innerText = dataItem.title;
+    document.getElementById('videoDescription').innerText = dataItem.description;
+    document.getElementById('videoSourceBadge').innerText = dataItem.category;
+
+    // Highlight chosen item card inside the playlist UI grid
+    document.querySelectorAll('.playlist-card').forEach(card => {
+        if (parseInt(card.getAttribute('data-id')) === id) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
         }
+    });
+}
 
         // Toggle visibility of the translation steps
         function toggleTranslationGuide() {
