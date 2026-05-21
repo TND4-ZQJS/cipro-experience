@@ -181,47 +181,61 @@
             .workspace-container { padding: 0 16px 60px 16px; }
         }
         
-        /* Language Selector Segmented Control */
-.language-selector-container {
+/* Collapsible Translation Guide */
+.translation-guide-container {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 10px;
+    margin-bottom: 16px;
+    margin-top: -4px;
+}
+
+.guide-toggle-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    font-weight: 500;
+    color: #0066cc; /* Apple's classic interactive link blue */
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 4px;
+    transition: color 0.2s ease;
 }
 
-.selector-label {
-    font-size: 13px;
+.guide-toggle-btn:hover {
+    color: #004499;
+    text-decoration: underline;
+}
+
+.guide-icon {
+    font-size: 11px;
+}
+
+/* Hidden by default with smooth expansion */
+.guide-steps-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+}
+
+.guide-steps-content.show {
+    max-height: 80px; /* Gives it room to slide open */
+    opacity: 1;
+    padding-top: 6px;
+}
+
+.guide-steps {
+    margin: 0;
+    font-size: 11px;
     color: #86868b;
+    line-height: 1.5;
+}
+
+.guide-steps strong {
     font-weight: 500;
-}
-
-.segmented-control {
-    background: rgba(0, 0, 0, 0.05);
-    padding: 2px;
-    border-radius: 8px;
-    display: inline-flex;
-}
-
-.control-btn {
-    border: none;
-    background: transparent;
-    padding: 6px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #515154;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.control-btn:hover {
-    color: #000000;
-}
-
-.control-btn.active {
-    background: #ffffff;
     color: #1d1d1f;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
     </style>
 </head>
@@ -253,18 +267,34 @@
         <!-- Video player maps dynamically here -->
     </div>
     
+<div class="stage-card">
+    <div class="video-player-wrapper" id="videoWrapperContainer">
+        <!-- Video player maps dynamically here -->
+    </div>
+    
     <div class="stage-info">
-        <!-- Modern Language Selector Segmented Control -->
-        <div class="language-selector-container">
-            <span class="selector-label">Caption Language:</span>
-            <div class="segmented-control">
-                <button id="langBtnEn" class="control-btn" onclick="switchVideoLanguage('en')">English</button>
-                <button id="langBtnZh" class="control-btn" onclick="switchVideoLanguage('zh')">中文</button>
+        <!-- Collapsible Minimalist Guide -->
+        <div class="translation-guide-container">
+            <button class="guide-toggle-btn" onclick="toggleTranslationGuide()">
+                <span class="guide-icon">🌐</span> View in 中文 (Chinese)...
+            </button>
+            <div id="collapsibleGuideSteps" class="guide-steps-content">
+                <p class="guide-steps">
+                    Captions are turned on by default. To translate: Click the player's <strong>Settings Gear (⚙️)</strong> ➡️ <strong>Subtitles/CC</strong> ➡️ <strong>Auto-translate</strong> ➡️ Select <strong>Chinese (Simplified)</strong>.
+                </p>
             </div>
         </div>
 
         <div class="meta-strip">
-            <span id="videoSourceBadge" class="source-badge">Loading...</span>
+            <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
+        </div>
+        <h1 id="videoTitle">Loading Session Title...</h1>
+        <p id="videoDescription">Loading descriptions...</p>
+    </div>
+</div>
+
+        <div class="meta-strip">
+            <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
         </div>
         <h1 id="videoTitle">Loading Session Title...</h1>
         <p id="videoDescription">Loading descriptions...</p>
@@ -388,12 +418,26 @@ function updateStagePlayer(id, explicitLang = null) {
     });
 }
 
-// Separate handle wrapper for the manual language toggle buttons
 function switchVideoLanguage(langCode) {
-    // Only reload if the user is actually choosing a different language
-    if (activeCaptionLanguage !== langCode) {
-        updateStagePlayer(currentActiveId, langCode);
+    activeCaptionLanguage = langCode;
+    
+    const noticeBox = document.getElementById('translationNotice');
+    
+    if (langCode === 'zh') {
+        // Show the helpful coaching banner if they request Chinese subtitles
+        noticeBox.style.display = 'block';
+        updateStagePlayer(currentActiveId, 'zh');
+    } else {
+        // Hide it if they are using English
+        noticeBox.style.display = 'none';
+        updateStagePlayer(currentActiveId, 'en');
     }
+}
+
+        // Toggle visibility of the translation steps
+function toggleTranslationGuide() {
+    const stepsContent = document.getElementById('collapsibleGuideSteps');
+    stepsContent.classList.toggle('show');
 }
 
         // Playlist filtering controller layout engine
