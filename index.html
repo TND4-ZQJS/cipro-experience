@@ -126,11 +126,11 @@
             transition: all 0.3s ease-out;
         }
 
-    .guide-steps-content.show {
-    max-height: 200px; /* Increased from 80px to give wrapped text on mobile plenty of space */
-    opacity: 1;
-    padding-top: 6px;
-}
+        .guide-steps-content.show {
+            max-height: 200px; /* Increased from 80px to give wrapped text on mobile plenty of space */
+            opacity: 1;
+            padding-top: 6px;
+        }
 
         .guide-steps {
             margin: 0;
@@ -295,11 +295,11 @@
         <!-- Segmented Category Filters -->
         <div class="filter-navigation">
             <div class="tab-scroll-container">
-                <button class="filter-tab active" onclick="filterPlaylist('all')">All Modules</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Survivor’s Stories')">EN: Survivor's Stories</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Technology of Hope')">EN: Technology of Hope</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Educational')">EN: Educational</button>
-                <button class="filter-tab" onclick="filterPlaylist('Chinese - 疾病后的人生')">CN: 疾病后的人生</button>
+                <button class="filter-tab active" data-category="all" onclick="filterPlaylist('all')">All Modules</button>
+                <button class="filter-tab" data-category="English - Survivor’s Stories" onclick="filterPlaylist('English - Survivor’s Stories')">EN: Survivor's Stories</button>
+                <button class="filter-tab" data-category="English - Technology of Hope" onclick="filterPlaylist('English - Technology of Hope')">EN: Technology of Hope</button>
+                <button class="filter-tab" data-category="English - Educational" onclick="filterPlaylist('English - Educational')">EN: Educational</button>
+                <button class="filter-tab" data-category="Chinese - 疾病后的人生" onclick="filterPlaylist('Chinese - 疾病后的人生')">CN: 疾病后的人生</button>
             </div>
         </div>
 
@@ -334,7 +334,7 @@
                 title: "Millennials Fighting Stage 4 Cancer: Will We Survive? | Part 3/3",
                 description: "What does the future hold for these resilient young cancer patients? Can they overcome the odds and triumph over this relentless disease?",
                 category: "English - Survivor’s Stories",
-                youtubeId: "GvK6TYmFwjo"
+                youtubeId: "GvK6TYmFwjo",
                 noCaptions: true // 🌟 Add this line to bypass caption checks
             },
             {
@@ -357,47 +357,47 @@
         let currentActiveId = 0;
         let currentFilter = 'all';
 
-function updateStagePlayer(id) {
-    currentActiveId = id;
-    const dataItem = playlistData.find(item => item.id === id);
-    if (!dataItem) return;
-    
-    const playerWrapper = document.getElementById('videoWrapperContainer');
-    const cleanId = dataItem.youtubeId.toString().trim();
+        function updateStagePlayer(id) {
+            currentActiveId = id;
+            const dataItem = playlistData.find(item => item.id === id);
+            if (!dataItem) return;
+            
+            const playerWrapper = document.getElementById('videoWrapperContainer');
+            const cleanId = dataItem.youtubeId.toString().trim();
 
-    // 🌟 Check if this specific video has captions turned off by the owner
-    let captionParams = "";
-    if (dataItem.noCaptions) {
-        // Force captions completely OFF to prevent the seek/fast-forward crash
-        captionParams = "cc_load_policy=0";
-    } else {
-        // Keep your original behavior for normal caption-supported videos
-        captionParams = "cc_load_policy=1&cc_lang_pref=en&hl=en";
-    }
+            // 🌟 Check if this specific video has captions turned off by the owner
+            let captionParams = "";
+            if (dataItem.noCaptions) {
+                // Force captions completely OFF to prevent the seek/fast-forward crash
+                captionParams = "cc_load_policy=0";
+            } else {
+                // Keep your original behavior for normal caption-supported videos
+                captionParams = "cc_load_policy=1&cc_lang_pref=en&hl=en";
+            }
 
-    // Inject the final parameterized iframe cleanly
-    playerWrapper.innerHTML = `
-        <iframe 
-            src="https://www.youtube.com/embed/${cleanId}?rel=0&${captionParams}" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
-    `;
-    
-    // Update textual UI fields
-    document.getElementById('videoTitle').innerText = dataItem.title;
-    document.getElementById('videoDescription').innerText = dataItem.description;
-    document.getElementById('videoSourceBadge').innerText = dataItem.category;
+            // Inject the final parameterized iframe cleanly
+            playerWrapper.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${cleanId}?rel=0&${captionParams}" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            // Update textual UI fields
+            document.getElementById('videoTitle').innerText = dataItem.title;
+            document.getElementById('videoDescription').innerText = dataItem.description;
+            document.getElementById('videoSourceBadge').innerText = dataItem.category;
 
-    // Highlight chosen item card inside the playlist UI grid
-    document.querySelectorAll('.playlist-card').forEach(card => {
-        if (parseInt(card.getAttribute('data-id')) === id) {
-            card.classList.add('active');
-        } else {
-            card.classList.remove('active');
+            // Highlight chosen item card inside the playlist UI grid
+            document.querySelectorAll('.playlist-card').forEach(card => {
+                if (parseInt(card.getAttribute('data-id')) === id) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
         }
-    });
-}
 
         // Toggle visibility of the translation steps
         function toggleTranslationGuide() {
@@ -409,10 +409,10 @@ function updateStagePlayer(id) {
         function filterPlaylist(categoryTag) {
             currentFilter = categoryTag;
             
-            // Update Tab Button Styles
+            // Update Tab Button Styles using data-category attribute
             const tabs = document.querySelectorAll('.filter-tab');
             tabs.forEach(tab => {
-                if(tab.getAttribute('onclick').includes(`'${categoryTag}'`)) {
+                if (tab.getAttribute('data-category') === categoryTag) {
                     tab.classList.add('active');
                 } else {
                     tab.classList.remove('active');
@@ -439,16 +439,15 @@ function updateStagePlayer(id) {
                 listGrid.appendChild(cardElement);
             });
 
-            // Auto-switch to first matching row if selection is filtered out
-            if(filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
+            // Auto-switch to first matching row if selection is filtered out of view
+            if (filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
                 updateStagePlayer(filteredData[0].id);
             }
         }
 
         // Initialize script logic processing 
         document.addEventListener("DOMContentLoaded", function() {
-            filterPlaylist('all'); // Build grid
-            updateStagePlayer(0);  // Initialize with video 0
+            filterPlaylist('all'); // Build grid and highlights initial active card
         });
     </script>
 </body>
