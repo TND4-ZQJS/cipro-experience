@@ -84,6 +84,62 @@
             line-height: 1.6;
         }
 
+        /* Collapsible Translation Guide Box */
+        .translation-guide-container {
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding-top: 12px;
+            margin-top: 16px;
+        }
+
+        .guide-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 12px;
+            font-weight: 500;
+            color: #0066cc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .guide-toggle-btn:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+
+        .guide-icon {
+            font-size: 12px;
+        }
+
+        /* Slide open container behavior */
+        .guide-steps-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .guide-steps-content.show {
+            max-height: 120px;
+            opacity: 1;
+            padding-top: 8px;
+        }
+
+        .guide-steps {
+            margin: 0;
+            font-size: 12px;
+            color: #6e6e73;
+            line-height: 1.5;
+        }
+
+        .guide-steps strong {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
         /* Apple Style Segmented Filter Tabs */
         .filter-navigation {
             margin-bottom: 20px;
@@ -216,6 +272,18 @@
                 </div>
                 <h1 id="videoTitle">Loading Session Title...</h1>
                 <p id="videoDescription">Loading dynamic system explanation descriptions...</p>
+
+                <!-- Collapsible Minimalist Caption Guide Box -->
+                <div class="translation-guide-container">
+                    <button class="guide-toggle-btn" onclick="toggleTranslationGuide()">
+                        <span class="guide-icon">🌐</span> View in 中文 (Chinese Translation Steps)...
+                    </button>
+                    <div id="collapsibleGuideSteps" class="guide-steps-content">
+                        <p class="guide-steps">
+                            Captions are forced on by default. To translate language track: Click the video's <strong>Settings Gear ⚙️</strong> inside the player &gt;&gt; select <strong>Subtitles/CC</strong> &gt;&gt; click <strong>Auto-translate</strong> &gt;&gt; choose <strong>Chinese (Simplified)</strong>.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -238,6 +306,12 @@
     <script>
         function toggleMobileMenu() {
             document.getElementById('navMenu').classList.toggle('show');
+        }
+
+        // Toggle visibility of translation steps smoothly
+        function toggleTranslationGuide() {
+            const stepsContent = document.getElementById('collapsibleGuideSteps');
+            stepsContent.classList.toggle('show');
         }
 
         // MASTER CATEGORIZED VIDEO DATA
@@ -284,7 +358,7 @@
             const playerWrapper = document.getElementById('videoWrapperContainer');
             const cleanId = dataItem.youtubeId.toString().trim();
 
-            // Swaps out iframe string with basic URL parameter structures smoothly
+            // Appends English caption defaults cleanly without complex API wrappers
             playerWrapper.innerHTML = `
                 <iframe 
                     src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&cc_lang_pref=en&hl=en" 
