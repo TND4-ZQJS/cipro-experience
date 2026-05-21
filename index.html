@@ -222,11 +222,11 @@
         <!-- Segmented Category Filters -->
         <div class="filter-navigation">
             <div class="tab-scroll-container">
-                <button class="filter-tab active" onclick="filterPlaylist('all')">All Modules</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Survivor’s Stories')">EN: Survivor's Stories</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Technology of Hope')">EN: Technology of Hope</button>
-                <button class="filter-tab" onclick="filterPlaylist('English - Educational')">EN: Educational</button>
-                <button class="filter-tab" onclick="filterPlaylist('Chinese - 疾病后的人生')">CN: 疾病后的人生</button>
+                <button class="filter-tab active" data-category="all" onclick="filterPlaylist('all')">All Modules</button>
+                <button class="filter-tab" data-category="English - Survivor’s Stories" onclick="filterPlaylist('English - Survivor’s Stories')">EN: Survivor's Stories</button>
+                <button class="filter-tab" data-category="English - Technology of Hope" onclick="filterPlaylist('English - Technology of Hope')">EN: Technology of Hope</button>
+                <button class="filter-tab" data-category="English - Educational" onclick="filterPlaylist('English - Educational')">EN: Educational</button>
+                <button class="filter-tab" data-category="Chinese - 疾病后的人生" onclick="filterPlaylist('Chinese - 疾病后的人生')">CN: 疾病后的人生</button>
             </div>
         </div>
 
@@ -247,7 +247,7 @@
                 title: "Millennials Fighting Stage 4 Cancer: How We Found Out | Part 1/3",
                 description: "They’re under 45, fit, and thriving in their careers—until cancer turns their worlds upside down",
                 category: "English - Educational",
-                youtubeId: "Xwd-OdVXvx8" // Your newly uploaded working video!
+                youtubeId: "Xwd-OdVXvx8"
             },
             {
                 id: 1,
@@ -279,12 +279,15 @@
         function updateStagePlayer(id) {
             currentActiveId = id;
             const dataItem = playlistData.find(item => item.id === id);
+            if (!dataItem) return;
+
             const playerWrapper = document.getElementById('videoWrapperContainer');
             const cleanId = dataItem.youtubeId.toString().trim();
 
+            // Swaps out iframe string with basic URL parameter structures smoothly
             playerWrapper.innerHTML = `
                 <iframe 
-                    src="https://www.youtube.com/embed/${cleanId}?rel=0" 
+                    src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&cc_lang_pref=en&hl=en" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen>
                 </iframe>
@@ -294,7 +297,7 @@
             document.getElementById('videoDescription').innerText = dataItem.description;
             document.getElementById('videoSourceBadge').innerText = dataItem.category;
 
-            // Highlight chosen item card inside UI list
+            // Highlight chosen item card inside UI list smoothly
             document.querySelectorAll('.playlist-card').forEach(card => {
                 if (parseInt(card.getAttribute('data-id')) === id) {
                     card.classList.add('active');
@@ -308,10 +311,10 @@
         function filterPlaylist(categoryTag) {
             currentFilter = categoryTag;
             
-            // Update Tab Button Styles
+            // Update Tab Button Styles cleanly with precise data attributes
             const tabs = document.querySelectorAll('.filter-tab');
             tabs.forEach(tab => {
-                if(tab.getAttribute('onclick').includes(`'${categoryTag}'`)) {
+                if (tab.getAttribute('data-category') === categoryTag) {
                     tab.classList.add('active');
                 } else {
                     tab.classList.remove('active');
@@ -338,16 +341,16 @@
                 listGrid.appendChild(cardElement);
             });
 
-            // If the filtered array leaves out our currently selected main player video, automatically switch player to first available video in the view array
-            if(filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
+            // Fallback selection validation tracking
+            if (filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
                 updateStagePlayer(filteredData[0].id);
             }
         }
 
-        // Initialize script logic processing 
+        // Initialize script logic cleanly across single workflow execution cycle
         document.addEventListener("DOMContentLoaded", function() {
-            filterPlaylist('all'); // Build grid
-            updateStagePlayer(0);  // Initialize with video 0
+            filterPlaylist('all');     // Generates structural grid system elements 
+            updateStagePlayer(0);      // Safely provisions base stage frame component references
         });
     </script>
 </body>
