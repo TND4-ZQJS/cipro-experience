@@ -181,47 +181,38 @@
             .workspace-container { padding: 0 16px 60px 16px; }
         }
         
-        /* Language Selector Segmented Control */
-.language-selector-container {
+/* Minimalist Translation Guide Card */
+.translation-guide-card {
+    background: #f5f5f7;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.guide-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 6px;
 }
 
-.selector-label {
-    font-size: 13px;
-    color: #86868b;
-    font-weight: 500;
+.guide-icon {
+    font-size: 16px;
 }
 
-.segmented-control {
-    background: rgba(0, 0, 0, 0.05);
-    padding: 2px;
-    border-radius: 8px;
-    display: inline-flex;
-}
-
-.control-btn {
-    border: none;
-    background: transparent;
-    padding: 6px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #515154;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.control-btn:hover {
-    color: #000000;
-}
-
-.control-btn.active {
-    background: #ffffff;
+.guide-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
     color: #1d1d1f;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.guide-steps {
+    margin: 0;
+    font-size: 13px;
+    color: #515154;
+    line-height: 1.5;
 }
     </style>
 </head>
@@ -254,14 +245,24 @@
     </div>
     
     <div class="stage-info">
-        <!-- Modern Language Selector Segmented Control -->
-        <div class="language-selector-container">
-            <span class="selector-label">Caption Language:</span>
-            <div class="segmented-control">
-                <button id="langBtnEn" class="control-btn" onclick="switchVideoLanguage('en')">English</button>
-                <button id="langBtnZh" class="control-btn" onclick="switchVideoLanguage('zh')">中文</button>
+        <!-- Clean Apple-Style Translation Guide Card -->
+        <div class="translation-guide-card">
+            <div class="guide-header">
+                <span class="guide-icon">🌐</span>
+                <h4>How to view in 中文 (Chinese)</h4>
             </div>
+            <p class="guide-steps">
+                Captions are turned on by default. To translate: Click the player's <strong>Settings Gear (⚙️)</strong> ➡️ <strong>Subtitles/CC</strong> ➡️ <strong>Auto-translate</strong> ➡️ Select <strong>Chinese (Simplified)</strong>.
+            </p>
         </div>
+
+        <div class="meta-strip">
+            <span id="videoSourceBadge" class="source-badge">Loading Module...</span>
+        </div>
+        <h1 id="videoTitle">Loading Session Title...</h1>
+        <p id="videoDescription">Loading descriptions...</p>
+    </div>
+</div>
 
         <div class="meta-strip">
             <span id="videoSourceBadge" class="source-badge">Loading...</span>
@@ -337,48 +338,30 @@ let currentFilter = 'all';
 let activeCaptionLanguage = 'en'; // Default fallback initialization
 
 // Core update function to rebuild the YouTube player interface
-function updateStagePlayer(id, explicitLang = null) {
+// Streamlined player engine enforcing default active subtitles
+// Streamlined player engine enforcing default active subtitles
+function updateStagePlayer(id) {
     currentActiveId = id;
     const dataItem = playlistData.find(item => item.id === id);
     const playerWrapper = document.getElementById('videoWrapperContainer');
     const cleanId = dataItem.youtubeId.toString().trim();
 
-    // 1. If explicitLang is provided (button click), use it. Otherwise, auto-detect from category.
-    if (explicitLang) {
-        activeCaptionLanguage = explicitLang;
-    } else {
-        if (dataItem.category.includes("Chinese") || dataItem.category.includes("疾病后的人生")) {
-            activeCaptionLanguage = 'zh';
-        } else {
-            activeCaptionLanguage = 'en';
-        }
-    }
-
-    // 2. Inject the parameterized iframe to reload the source target matching the selection
+    // cc_load_policy=1 forces captions ON by default
+    // hl=en guarantees the initial player interface and track targets English auto-caps
     playerWrapper.innerHTML = `
         <iframe 
-            src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&hl=${activeCaptionLanguage}&cc_lang_pref=${activeCaptionLanguage}" 
+            src="https://www.youtube.com/embed/${cleanId}?rel=0&cc_load_policy=1&hl=en" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
         </iframe>
     `;
     
-    // 3. Update textual UI fields
+    // Sync text content fields
     document.getElementById('videoTitle').innerText = dataItem.title;
     document.getElementById('videoDescription').innerText = dataItem.description;
     document.getElementById('videoSourceBadge').innerText = dataItem.category;
 
-    // 4. Update the highlight state of the language selector UI buttons
-    document.getElementById('langBtnEn').classList.remove('active');
-    document.getElementById('langBtnZh').classList.remove('active');
-    
-    if (activeCaptionLanguage === 'zh') {
-        document.getElementById('langBtnZh').classList.add('active');
-    } else {
-        document.getElementById('langBtnEn').classList.add('active');
-    }
-
-    // 5. Highlight chosen item card inside the playlist UI grid
+    // Highlight active item card in selection list
     document.querySelectorAll('.playlist-card').forEach(card => {
         if (parseInt(card.getAttribute('data-id')) === id) {
             card.classList.add('active');
