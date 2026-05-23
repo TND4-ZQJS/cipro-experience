@@ -208,7 +208,7 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    overflow-x: clip;  /* ← add this, clips without blocking scroll */
+    overflow: visible; /* Changed from clip to allow inner scrolling */
 }
 
 
@@ -396,13 +396,24 @@
             border-left: 1px solid rgba(0,0,0,0.1);
         }
 
-        /* ---- Responsive ---- */
+             /* ---- Responsive ---- */
         @media (max-width: 768px) {
             .stage-info { padding: 18px 20px; }
             .stage-info h1 { font-size: 18px; }
             .workspace-container { margin-top: 24px; padding: 0 16px 80px; }
-            .filter-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            
+            /* Enhanced Mobile Filter Mechanics */
+            .filter-row { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 8px; 
+                width: 100%;
+            }
             .filter-label { min-width: unset; }
+            .tab-scroll-container { 
+                width: 100%; /* Force container to span full width for smooth scrolling */
+                padding-bottom: 6px; /* Extra breathing room for mobile touch tracks */
+            }
         }
     </style>
 </head>
