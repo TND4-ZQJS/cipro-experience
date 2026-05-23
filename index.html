@@ -5,66 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InsuFlow | CI Pro Experience</title>
     
-    <!-- Shared global navigation style link -->
-    <link rel="stylesheet" href="global-nav.css">
-
     <style>
-        /* Modern Apple Aesthetic Layout Styles */
+        /* ============================================================
+           GLOBAL NAV (inline since global-nav.css is external)
+           ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --nav-height: 52px;
+            --accent: #0071e3;
+            --bg: #f5f5f7;
+            --surface: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #515154;
+            --text-tertiary: #86868b;
+            --border: rgba(0, 0, 0, 0.06);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+        }
+
         body {
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ---- Navbar ---- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            height: var(--nav-height);
+        }
+
+        .nav-container {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .nav-item {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); }
+        .nav-item.active { background: rgba(0,113,227,0.08); color: var(--accent); }
+
+        /* Mobile hamburger */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 6px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 700px) {
+            .menu-toggle { display: flex; }
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: var(--nav-height);
+                left: 0; right: 0;
+                background: rgba(255,255,255,0.97);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 12px 16px 20px;
+                gap: 2px;
+                border-bottom: 1px solid var(--border);
+            }
+            .nav-menu.show { display: flex; }
+            .nav-item { width: 100%; padding: 10px 14px; }
+        }
+
+        /* ============================================================
+           WORKSPACE
+           ============================================================ */
         .workspace-container {
             max-width: 940px;
             margin: 40px auto;
-            padding: 0 24px 80px 24px;
+            padding: 0 24px 100px;
         }
 
-        /* Video Showcase Stage */
+        /* ---- Stage Card ---- */
         .stage-card {
-            background: #ffffff;
-            border-radius: 20px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
-            margin-bottom: 32px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+            margin-bottom: 28px;
         }
 
         .video-player-wrapper {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            background-color: #000000;
+            padding-top: 56.25%;
+            background: #000;
         }
 
         .video-player-wrapper iframe {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             border: 0;
         }
 
-        .stage-info {
-            padding: 28px 32px;
-        }
-
-        .stage-info h1 {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.015em;
-            margin-bottom: 6px;
-            color: #1d1d1f;
-        }
+        .stage-info { padding: 28px 32px; }
 
         .meta-strip {
             display: flex;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
 
         .source-badge {
@@ -72,196 +168,32 @@
             align-items: center;
             font-size: 12px;
             font-weight: 500;
-            color: #0071e3;
-            background-color: #f5f5f7;
+            color: var(--accent);
+            background: #f0f7ff;
             padding: 4px 10px;
             border-radius: 6px;
         }
 
+        .stage-info h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
         .stage-info p {
             font-size: 15px;
-            color: #515154;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        /* Apple Style Segmented Filter Tabs */
+        /* ---- Filter Panel ---- */
         .filter-navigation {
-            margin-bottom: 20px;
-        }
-
-        .tab-scroll-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scrollbar-width: none; /* Hide for Firefox */
-        }
-        .tab-scroll-container::-webkit-scrollbar { display: none; } /* Hide for Chrome/Safari */
-
-        .filter-tab {
-            background: rgba(0, 0, 0, 0.04);
-            border: none;
-            color: #515154;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: 999px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .filter-tab:hover {
-            background: rgba(0, 0, 0, 0.08);
-            color: #000000;
-        }
-
-        .filter-tab.active {
-            background: #1d1d1f;
-            color: #ffffff;
-        }
-
-           /* Thumbnail Playlist Section */
-        .playlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-        }
-
-        .playlist-card {
-            background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 14px;
-            padding: 20px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .playlist-card:hover {
-            background-color: #f5f5f7;
-            border-color: #d2d2d7;
-            transform: translateY(-1px);
-        }
-
-        .playlist-card.active {
-            background-color: #f5f5f7;
-            border-color: #0071e3;
-            box-shadow: inset 0 0 0 1px #0071e3;
-        }
-
-        .playlist-card .video-tag {
-            font-size: 11px;
-            font-weight: 600;
-            color: #86868b;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-
-        .playlist-card h3 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1d1d1f;
-            line-height: 1.4;
-            margin: 4px 0;
-        }
-
-        .playlist-card .card-source {
-            font-size: 12px;
-            color: #86868b;
-            margin-top: auto;
-            padding-top: 4px;
-        }
-
-        /* ==========================================================================
-           FLOATING STATUS BAR (Moved Outside Media Query for Universal Desktop/Mobile Support)
-           ========================================================================== */
-        .floating-status-bar {
-            position: fixed;
-            bottom: -80px; /* Hidden below screen by default */
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 12px 20px;
-            border-radius: 999px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            width: calc(100% - 48px);
-            max-width: 500px;
-            z-index: 9999;
-            cursor: pointer;
-            transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .floating-status-bar.visible {
-            bottom: 24px; /* Slides up smoothly into view */
-        }
-
-        .floating-status-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Mini recording/playing status pulse indicator */
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #34c759; /* Apple Green */
-            border-radius: 50%;
-            box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.4);
-            animation: pulseActive 2s infinite;
-            flex-shrink: 0;
-        }
-
-        @keyframes pulseActive {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.5); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(52, 199, 89, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
-        }
-
-        .status-text-wrapper {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            flex-grow: 1;
-        }
-
-        .floating-status-bar .status-label {
-            font-size: 9px;
-            font-weight: 700;
-            color: #86868b;
-            letter-spacing: 0.05em;
-        }
-
-        .floating-status-bar .status-title {
-            font-size: 13px;
-            font-weight: 500;
-            color: #1d1d1f;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .status-action-arrow {
-            font-size: 12px;
-            font-weight: 600;
-            color: #0071e3;
-            white-space: nowrap;
-            padding-left: 8px;
-            border-left: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-                /* Multi-Criteria Filter Dashboard Styling */
-        .filter-navigation {
-            background-color: #ffffff;
-            padding: 20px;
+            background: var(--surface);
+            padding: 20px 24px;
             border-radius: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -277,46 +209,200 @@
         .filter-label {
             font-size: 11px;
             font-weight: 700;
-            color: #86868b;
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             min-width: 85px;
             flex-shrink: 0;
         }
 
-        .filter-row .tab-scroll-container {
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .tab-scroll-container {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+            flex-grow: 1;
+        }
+        .tab-scroll-container::-webkit-scrollbar { display: none; }
+
+        .filter-tab {
+            background: rgba(0,0,0,0.04);
+            border: none;
+            color: var(--text-secondary);
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .filter-tab:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); }
+        .filter-tab.active { background: var(--text-primary); color: #fff; }
+
+        /* ---- Playlist Grid ---- */
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .playlist-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: transform 0.2s cubic-bezier(0.25,1,0.5,1), border-color 0.2s, background 0.2s;
+        }
+
+        .playlist-card:hover {
+            background: var(--bg);
+            border-color: #d2d2d7;
+            transform: translateY(-2px);
+        }
+
+        .playlist-card.active {
+            background: #f0f7ff;
+            border-color: var(--accent);
+            box-shadow: inset 0 0 0 1px var(--accent);
+        }
+
+        .video-tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .playlist-card h3 {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.45;
+            margin: 4px 0;
+        }
+
+        .card-source {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: auto;
+            padding-top: 6px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px dashed #d2d2d7;
+        }
+
+        /* ---- Floating Status Bar ---- */
+        .floating-status-bar {
+            position: fixed;
+            bottom: -90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 12px 20px;
+            border-radius: 999px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            width: calc(100% - 48px);
+            max-width: 500px;
+            z-index: 9999;
+            cursor: pointer;
+            transition: bottom 0.4s cubic-bezier(0.25,1,0.5,1);
+        }
+
+        .floating-status-bar.visible { bottom: 24px; }
+
+        .floating-status-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #34c759;
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: pulseActive 2s infinite;
+        }
+
+        @keyframes pulseActive {
+            0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52,199,89,0.5); }
+            70%  { transform: scale(1);    box-shadow: 0 0 0 8px rgba(52,199,89,0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+        }
+
+        .status-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             flex-grow: 1;
         }
 
-        @media (max-width: 640px) {
-            .filter-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-            .filter-label {
-                min-width: unset;
-            }
+        .status-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
-        /* Responsive Mobile Variations */
+        .status-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-action-arrow {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            padding-left: 12px;
+            border-left: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* ---- Responsive ---- */
         @media (max-width: 768px) {
-            .stage-info { padding: 20px; }
-            .stage-info h1 { font-size: 20px; }
-            .workspace-container { padding: 0 16px 60px 16px; }
+            .stage-info { padding: 18px 20px; }
+            .stage-info h1 { font-size: 18px; }
+            .workspace-container { margin-top: 24px; padding: 0 16px 80px; }
+            .filter-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .filter-label { min-width: unset; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Universal Top Navigation Row -->
+    <!-- ============================
+         NAVIGATION
+         ============================ -->
     <header class="navbar">
         <div class="nav-container">
             <span class="logo" onclick="window.location.href='dashboard.html'">InsuFlow Hub</span>
-            
-            <div class="menu-toggle" onclick="toggleMobileMenu()">
+
+            <div class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </div>
 
@@ -329,26 +415,25 @@
         </div>
     </header>
 
-    <!-- Workspace Content Layout Display Stage -->
+    <!-- ============================
+         MAIN WORKSPACE
+         ============================ -->
     <main class="workspace-container">
-        
+
+        <!-- Video Stage -->
         <div class="stage-card">
-            <div class="video-player-wrapper" id="videoWrapperContainer">
-                <!-- Video player maps dynamically here -->
-            </div>
-            
+            <div class="video-player-wrapper" id="videoWrapperContainer"></div>
             <div class="stage-info">
                 <div class="meta-strip">
                     <span id="videoSourceBadge" class="source-badge">Loading...</span>
                 </div>
                 <h1 id="videoTitle">Loading Session Title...</h1>
-                <p id="videoDescription">Loading dynamic system explanation descriptions...</p>
+                <p id="videoDescription">Loading description...</p>
             </div>
         </div>
 
-                <!-- Segmented Multi-Criteria Filters -->
+        <!-- Filter Panel -->
         <div class="filter-navigation">
-            <!-- Row 1: Language Selection -->
             <div class="filter-row">
                 <span class="filter-label">Language:</span>
                 <div class="tab-scroll-container" id="languageFilterGroup">
@@ -357,8 +442,6 @@
                     <button class="filter-tab" onclick="setLanguageFilter('chinese')">中文</button>
                 </div>
             </div>
-
-            <!-- Row 2: Critical Illness Type Selection -->
             <div class="filter-row">
                 <span class="filter-label">Condition:</span>
                 <div class="tab-scroll-container" id="illnessFilterGroup">
@@ -371,37 +454,35 @@
             </div>
         </div>
 
-        <!-- Filtered Grid -->
+        <!-- Playlist Grid -->
         <div class="playlist-grid" id="playlistItemsGrid"></div>
 
-        <!-- Smart Sticky Float Indicator -->
-<div id="floatingStatusTracker" class="floating-status-bar" onclick="scrollToVideoPlayer()">
-    <div class="floating-status-content">
-        <span class="pulse-dot"></span>
-        <div class="status-text-wrapper">
-            <span class="status-label">NOW COATING ACTION</span>
-            <span id="floatingVideoTitle" class="status-title">Loading...</span>
+        <!-- Floating Status Bar -->
+        <div id="floatingStatusTracker" class="floating-status-bar" onclick="scrollToVideoPlayer()">
+            <div class="floating-status-content">
+                <span class="pulse-dot"></span>
+                <div class="status-text-wrapper">
+                    <span class="status-label">Now Playing</span>
+                    <span id="floatingVideoTitle" class="status-title">Loading...</span>
+                </div>
+                <span class="status-action-arrow">↑ Jump to Player</span>
+            </div>
         </div>
-        <span class="status-action-arrow">↑ Jump to Player</span>
-    </div>
-</div>
 
     </main>
 
     <script>
-        function toggleMobileMenu() {
-            document.getElementById('navMenu').classList.toggle('show');
-        }
-
-        // MASTER CATEGORIZED VIDEO DATA (Updated with explicit Language and Illness filters)
+        // ============================================================
+        // DATA
+        // ============================================================
         const playlistData = [
             {
                 id: 0,
                 title: "Millennials Fighting Stage 4 Cancer: How We Found Out | Part 1/3",
-                description: "They’re under 45, fit, and thriving in their careers—until cancer turns their worlds upside down",
+                description: "They're under 45, fit, and thriving in their careers—until cancer turns their worlds upside down.",
                 language: "english",
                 illness: "cancer",
-                category: "English - Survivor’s Stories",
+                category: "English - Survivor's Stories",
                 youtubeId: "Xwd-OdVXvx8"
             },
             {
@@ -410,7 +491,7 @@
                 description: "The three young patients need to adapt as the disease continues to shift their realities.",
                 language: "english",
                 illness: "cancer",
-                category: "English - Survivor’s Stories",
+                category: "English - Survivor's Stories",
                 youtubeId: "AOr9IKhkxac"
             },
             {
@@ -419,8 +500,8 @@
                 description: "What does the future hold for these resilient young cancer patients? Can they overcome the odds and triumph over this relentless disease?",
                 language: "english",
                 illness: "cancer",
-                category: "English - Survivor’s Stories",
-                youtubeId: "GvK6TYmFwjo",
+                category: "English - Survivor's Stories",
+                youtubeId: "GvK6TYmFwjo"
             },
             {
                 id: 3,
@@ -455,7 +536,7 @@
                 description: "34-year-old Edwin Gan was diagnosed with an aggressive brain tumour two years ago. Financial planning helped cover the burden of his $350,000 hospital bills.",
                 language: "english",
                 illness: "cancer",
-                category: "English - Survivor’s Stories",
+                category: "English - Survivor's Stories",
                 youtubeId: "yVPWhNvpMAI"
             },
             {
@@ -478,7 +559,7 @@
             },
             {
                 id: 9,
-                title: "Why More Young People Are Getting Cancer | Business Insider Explains | Insider News",
+                title: "Why More Young People Are Getting Cancer | Business Insider Explains",
                 description: "More people, from their teens to young adults, are getting cancer than ever before, leaving researchers scrambling for clues.",
                 language: "english",
                 illness: "cancer",
@@ -487,177 +568,127 @@
             }
         ];
 
+        // ============================================================
+        // STATE
+        // ============================================================
         let currentActiveId = 0;
-        let currentFilter = 'all';
-
-        // Stage updater engine
-        function updateStagePlayer(id) {
-            currentActiveId = id;
-            const dataItem = playlistData.find(item => item.id === id);
-            const playerWrapper = document.getElementById('videoWrapperContainer');
-            const cleanId = dataItem.youtubeId.toString().trim();
-
-            playerWrapper.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${cleanId}?rel=0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            `;
-            
-            document.getElementById('videoTitle').innerText = dataItem.title;
-            document.getElementById('videoDescription').innerText = dataItem.description;
-            document.getElementById('videoSourceBadge').innerText = dataItem.category;
-
-            // Highlight chosen item card inside UI list
-            document.querySelectorAll('.playlist-card').forEach(card => {
-                if (parseInt(card.getAttribute('data-id')) === id) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
-        }
-
-           // Tracking states for filters
         let currentLanguageFilter = 'all';
         let currentIllnessFilter = 'all';
 
+        // ============================================================
+        // PLAYER
+        // ============================================================
+        function updateStagePlayer(id) {
+            currentActiveId = id;
+            const item = playlistData.find(v => v.id === id);
+            if (!item) return;
+
+            // Update iframe
+            document.getElementById('videoWrapperContainer').innerHTML = `
+                <iframe
+                    src="https://www.youtube.com/embed/${item.youtubeId}?rel=0&autoplay=0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>`;
+
+            // Update stage info
+            document.getElementById('videoTitle').textContent       = item.title;
+            document.getElementById('videoDescription').textContent = item.description;
+            document.getElementById('videoSourceBadge').textContent = item.category;
+
+            // Update floating bar title
+            document.getElementById('floatingVideoTitle').textContent = item.title;
+
+            // Refresh active state on cards
+            document.querySelectorAll('.playlist-card').forEach(card => {
+                card.classList.toggle('active', parseInt(card.dataset.id) === id);
+            });
+        }
+
+        // ============================================================
+        // FILTERS
+        // ============================================================
         function setLanguageFilter(lang) {
             currentLanguageFilter = lang;
             updateTabVisuals('languageFilterGroup', lang);
             applyCombinedFilters();
         }
 
-        function setIllnessFilter(illnessType) {
-            currentIllnessFilter = illnessType;
-            updateTabVisuals('illnessFilterGroup', illnessType);
+        function setIllnessFilter(illness) {
+            currentIllnessFilter = illness;
+            updateTabVisuals('illnessFilterGroup', illness);
             applyCombinedFilters();
         }
 
-        // Toggles active CSS class states across specific button groups
-        function updateTabVisuals(containerId, value) {
-            const container = document.getElementById(containerId);
-            const tabs = container.querySelectorAll('.filter-tab');
-            tabs.forEach(tab => {
-                if(tab.getAttribute('onclick').includes(`'${value}'`)) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
+        function updateTabVisuals(containerId, selectedValue) {
+            document.querySelectorAll(`#${containerId} .filter-tab`).forEach(tab => {
+                // Match by extracting the argument from the onclick string
+                const match = tab.getAttribute('onclick').match(/'([^']+)'/);
+                tab.classList.toggle('active', match && match[1] === selectedValue);
             });
         }
 
-        // Unified rendering engine evaluating multi-level filter queries
         function applyCombinedFilters() {
-            const listGrid = document.getElementById('playlistItemsGrid');
-            listGrid.innerHTML = ''; 
+            const grid = document.getElementById('playlistItemsGrid');
+            grid.innerHTML = '';
 
-            // Filter data checking both parameters sequentially
-            const filteredData = playlistData.filter(item => {
-                const matchesLanguage = (currentLanguageFilter === 'all' || item.language === currentLanguageFilter);
-                const matchesIllness = (currentIllnessFilter === 'all' || item.illness === currentIllnessFilter);
-                return matchesLanguage && matchesIllness;
+            const filtered = playlistData.filter(item => {
+                const langOk    = currentLanguageFilter === 'all' || item.language === currentLanguageFilter;
+                const illnessOk = currentIllnessFilter  === 'all' || item.illness  === currentIllnessFilter;
+                return langOk && illnessOk;
             });
 
-            // Populate items grid matching filter arrays
-            filteredData.forEach((item) => {
-                const cardElement = document.createElement('div');
-                cardElement.className = `playlist-card ${item.id === currentActiveId ? 'active' : ''}`;
-                cardElement.setAttribute('data-id', item.id);
-                cardElement.setAttribute('onclick', `updateStagePlayer(${item.id})`);
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No videos found for this combination.<br>Try a different filter.</div>`;
+                return;
+            }
 
-                // Generate clean modern tag display combining properties
-                const visualTag = `${item.language.toUpperCase()} • ${item.illness.toUpperCase()}`;
-
-                cardElement.innerHTML = `
-                    <span class="video-tag">${visualTag}</span>
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `playlist-card${item.id === currentActiveId ? ' active' : ''}`;
+                card.dataset.id = item.id;
+                card.innerHTML = `
+                    <span class="video-tag">${item.language.toUpperCase()} • ${item.illness.toUpperCase()}</span>
                     <h3>${item.title}</h3>
-                    <span class="card-source">📺 Click to View</span>
-                `;
-                listGrid.appendChild(cardElement);
+                    <span class="card-source">📺 Click to View</span>`;
+                card.addEventListener('click', () => updateStagePlayer(item.id));
+                grid.appendChild(card);
             });
 
-            // Empty state fallback visual block
-            if (filteredData.length === 0) {
-                listGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #86868b; font-size: 14px;">
-                        No video modules found matching the chosen combination.
-                    </div>`;
-            } else if (!filteredData.some(item => item.id === currentActiveId)) {
-                // Smoothly update player stage onto first match option if active item is out of view bounds
-                updateStagePlayer(filteredData[0].id);
+            // If the currently playing video is not in the filtered set, auto-play the first result
+            if (!filtered.some(item => item.id === currentActiveId)) {
+                updateStagePlayer(filtered[0].id);
             }
         }
 
-            // Rebuild Grid List Interface
-            const listGrid = document.getElementById('playlistItemsGrid');
-            listGrid.innerHTML = ''; 
-
-            const filteredData = playlistData.filter(item => categoryTag === 'all' || item.category === categoryTag);
-
-            filteredData.forEach((item) => {
-                const cardElement = document.createElement('div');
-                cardElement.className = `playlist-card ${item.id === currentActiveId ? 'active' : ''}`;
-                cardElement.setAttribute('data-id', item.id);
-                cardElement.setAttribute('onclick', `updateStagePlayer(${item.id})`);
-
-                cardElement.innerHTML = `
-                    <span class="video-tag">${item.category}</span>
-                    <h3>${item.title}</h3>
-                    <span class="card-source">📺 Click to View</span>
-                `;
-                listGrid.appendChild(cardElement);
-            });
-
-            // If the filtered array leaves out our currently selected main player video, automatically switch player to first available video in the view array
-            if(filteredData.length > 0 && !filteredData.some(item => item.id === currentActiveId)) {
-                updateStagePlayer(filteredData[0].id);
-            }
+        // ============================================================
+        // FLOATING BAR — scroll visibility
+        // ============================================================
+        function scrollToVideoPlayer() {
+            document.getElementById('videoWrapperContainer')
+                .scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-            // Initialize script logic processing 
-        document.addEventListener("DOMContentLoaded", function() {
-            applyCombinedFilters(); // Build initial grid using cross-filtering rules
-            updateStagePlayer(0);   // Initialize with video 0
+        window.addEventListener('scroll', () => {
+            const playerBounds = document.getElementById('videoWrapperContainer').getBoundingClientRect();
+            const bar = document.getElementById('floatingStatusTracker');
+            bar.classList.toggle('visible', playerBounds.bottom < 0);
         });
 
-        // Global jump handling function
-function scrollToVideoPlayer() {
-    const stage = document.getElementById('videoWrapperContainer');
-    if(stage) {
-        stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-}
+        // ============================================================
+        // MOBILE NAV
+        // ============================================================
+        function toggleMobileMenu() {
+            document.getElementById('navMenu').classList.toggle('show');
+        }
 
-// Intercept your existing updateStagePlayer function to refresh the title copy
-const originalUpdateStagePlayer = updateStagePlayer;
-updateStagePlayer = function(id) {
-    originalUpdateStagePlayer(id);
-    
-    // Sync current active title to floating view display element
-    const dataItem = playlistData.find(item => item.id === id);
-    if(dataItem) {
-        document.getElementById('floatingVideoTitle').innerText = dataItem.title;
-    }
-};
-
-// Monitor the view layout scroll event loop
-window.addEventListener('scroll', function() {
-    const playerWrapper = document.getElementById('videoWrapperContainer');
-    const floatingBar = document.getElementById('floatingStatusTracker');
-    
-    if(!playerWrapper || !floatingBar) return;
-    
-    // Check if the bottom edge of the player box has passed completely out of sight up top
-    const playerBounds = playerWrapper.getBoundingClientRect();
-    
-    if (playerBounds.bottom < 0) {
-        floatingBar.classList.add('visible');
-    } else {
-        floatingBar.classList.remove('visible');
-    }
-});
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            applyCombinedFilters();
+            updateStagePlayer(0);
+        });
     </script>
 </body>
 </html>
