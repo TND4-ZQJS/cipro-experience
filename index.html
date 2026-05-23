@@ -189,22 +189,28 @@
         }
 
         /* ---- Filter Panel ---- */
-        .filter-navigation {
-            background: var(--surface);
-            padding: 20px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+       .filter-navigation {
+    background: var(--surface);
+    padding: 20px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+    overflow: hidden; /* ← add this */
+    width: 100%;      /* ← add this */
+}
 
-        .filter-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+
+    .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    overflow: hidden; /* ← add this */
+}
+
 
         .filter-label {
             font-size: 11px;
