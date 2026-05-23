@@ -222,15 +222,18 @@
             flex-shrink: 0;
         }
 
-        .tab-scroll-container {
+   .tab-scroll-container {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     padding-bottom: 2px;
     scrollbar-width: none;
     flex-grow: 1;
-    min-width: 0; /* ← add this line */
+    min-width: 0;
+    -webkit-overflow-scrolling: touch; /* ← add this */
+    touch-action: pan-x;               /* ← add this */
 }
+
 
         .tab-scroll-container::-webkit-scrollbar { display: none; }
 
