@@ -189,7 +189,7 @@
         }
 
         /* ---- Filter Panel ---- */
-   .filter-navigation {
+.filter-navigation {
     background: var(--surface);
     padding: 20px 24px;
     border-radius: 16px;
@@ -199,6 +199,7 @@
     gap: 16px;
     margin-bottom: 24px;
     width: 100%;
+    overflow: hidden;  /* ← add back */
 }
 
 
@@ -207,7 +208,9 @@
     align-items: center;
     gap: 16px;
     width: 100%;
+    overflow-x: clip;  /* ← add this, clips without blocking scroll */
 }
+
 
 
 
